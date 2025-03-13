@@ -1,0 +1,36 @@
+nav {
+  background-color: #fefeec;
+}
+
+.btn-animated {
+  position: relative;
+  border: none;
+  background-color: transparent;
+  padding-bottom: 8px;
+}
+
+.btn-animated::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 0;
+  background-color: black;
+  transition: width 0.3s ease-in-out;
+}
+
+.btn-animated:hover::after {
+  width: 100%;
+}
+
+.btn-sign:hover {
+  background-color: #dd732c;
+}
+.btn-sign .react-icon {
+  color: #242402;
+}
+
+.btn-sign:hover .react-icon {
+  color: white;
+}

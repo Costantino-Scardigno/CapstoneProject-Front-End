@@ -1,0 +1,22 @@
+.h-color {
+  color: #dc722b;
+}
+.fixed-height {
+  height: 500px;
+}
+
+@media (max-width: 1200px) {
+  .fixed-height {
+    height: 250px;
+    margin-bottom: 20px;
+  }
+}
+.pt-6 {
+  padding-top: 100px;
+  padding-bottom: 100px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.bg-how {
+  background-color: #e5f3ee;
+}
