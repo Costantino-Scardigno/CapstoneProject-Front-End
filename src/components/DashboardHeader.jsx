@@ -93,9 +93,12 @@ const DashboardHeader = ({ onSearch, searchQuery, setSearchQuery }) => {
 
   return (
     <nav className="px-0 py-2 bg-dashboard">
-      <div className="d-flex flex-column flex-sm-row justify-content-between align-items-center">
-        <Link className="text-decoration-none fs-2 text-primary-custom" to="/">
-          <img className="w-50" src={logoImage} alt="" />
+      <div className="d-flex flex-column flex-sm-row justify-content-sm-between justify-content-center align-items-center">
+        <Link
+          className="d-flex justify-content-center justify-content-sm-start  text-decoration-none fs-2 text-primary-custom"
+          to="/"
+        >
+          <img className="w-75" src={logoImage} alt="" />
         </Link>
         <div className="d-flex align-items-center my-3">
           <div className="me-3">
@@ -107,7 +110,7 @@ const DashboardHeader = ({ onSearch, searchQuery, setSearchQuery }) => {
                 <input
                   type="text"
                   placeholder="Cerca album o foto..."
-                  className="form-control ps-4"
+                  className="form-control ps-4 "
                   value={searchQuery}
                   onChange={handleSearchChange}
                 />
