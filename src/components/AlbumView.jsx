@@ -4,11 +4,12 @@ import {
   Share2,
   Heart,
   MessageSquare,
-  MoreHorizontal,
   Upload,
-  Loader,
   ArrowLeft,
+  Trash2,
 } from "lucide-react";
+import DeletePhotoModal from "./modals/DeletePhotoModal";
+import PhotoSkeleton from "./Skeleton/PhotoSkeleton";
 
 const AlbumView = ({
   selectedAlbum,
@@ -21,6 +22,7 @@ const AlbumView = ({
   const [eventData, setEventData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [photoToDelete, setPhotoToDelete] = useState(null);
 
   useEffect(() => {
     console.log("AlbumView useEffect - selectedAlbum:", selectedAlbum);
@@ -36,7 +38,7 @@ const AlbumView = ({
     setLoading(true);
 
     fetch(
-      `http://localhost:8080/api/events/${selectedAlbum.id}?includeDetails=true`,
+      `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/events/${selectedAlbum.id}?includeDetails=true`,
       {
         method: "GET",
         headers: {
@@ -52,22 +54,47 @@ const AlbumView = ({
         return response.json();
       })
       .then((data) => {
-        console.log("Album data fetched:", data);
         setEventData(data);
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching album:", error);
         setError(error.message);
         setLoading(false);
       });
   }, [selectedAlbum?.id, refreshTrigger]);
 
+  // Funzione per aprire il modale di conferma
+  const openDeleteModal = (photo, e) => {
+    e.stopPropagation();
+    setPhotoToDelete(photo);
+  };
+
+  // Funzione per chiudere il modale
+  const closeDeleteModal = () => {
+    setPhotoToDelete(null);
+  };
+
+  // Funzione per aggiornare i dati dopo l'eliminazione della foto
+  const handlePhotoDelete = (deletedPhotoId) => {
+    setEventData((prevData) => {
+      return {
+        ...prevData,
+        photos: prevData.photos.filter((p) => p.id !== deletedPhotoId),
+        photoCount: prevData.photoCount - 1,
+      };
+    });
+    closeDeleteModal();
+  };
+
   if (loading) {
+    // Array per 8 skeleton
+    const skeletonPhotos = Array(8).fill(0);
+
     return (
-      <div className="text-center p-5">
-        <Loader className="animate-spin" size={40} />
-        <p className="mt-3">Caricamento album in corso...</p>
+      <div className="row g-3">
+        {skeletonPhotos.map((_, index) => (
+          <PhotoSkeleton key={index} />
+        ))}
       </div>
     );
   }
@@ -86,34 +113,34 @@ const AlbumView = ({
     <div>
       <div className="d-flex align-items-center mb-4">
         <button
-          className=" bg-dashboard border-0 rounded-circle me-2"
+          className="bg-dashboard border-0 rounded-circle me-2"
           onClick={() => setSelectedAlbum(null)}
         >
-          <ArrowLeft size={30} color="#5b8fd2" />
+          <ArrowLeft size={30} color="#e1bb80" />
         </button>
         <h2 className="h4 mb-0 display-6 font-effect">{eventData.name}</h2>
       </div>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <div className="d-flex align-items-center gap-3 small d-none d-sm-inline-flex text-muted">
-          <div className="d-flex align-items-center">
+      <div className="d-flex flex-column flex-sm-row justify-content-between align-items-center mb-4">
+        <div className="d-flex align-items-center gap-3 small text-muted-custom mb-4 mb-sm-0 mb-md-0 mb-lg-0">
+          <div className="d-flex flex-shrink-0 flex-column flex-sm-row align-items-center me-2">
             <Image size={16} className="me-1" />
             <span>{eventData.photoCount || 0} foto</span>
           </div>
-          <div className="d-flex align-items-center">
+          <div className="d-flex d-none-custom flex-shrink-0 flex-column flex-sm-row align-items-center me-2">
             <Share2 size={16} className="me-1" />
             <span>Condiviso con 0</span>
           </div>
-          <div className="d-flex align-items-center">
+          <div className="d-flex flex-column flex-sm-row align-items-center me-2">
             <Heart size={16} className="me-1 text-danger" />
             <span>{eventData.totalLikeCount}</span>
           </div>
-          <div className="d-flex align-items-center">
-            <MessageSquare size={16} className="me-1 text-primary" />
+          <div className="d-flex flex-shrink-0 flex-column flex-sm-row align-items-center">
+            <MessageSquare size={16} className="me-1 text-secondary-custom" />
             <span>{eventData.totalCommentCount || 0} commenti</span>
           </div>
         </div>
         <button
-          className="btn-animated-album btn btn-album d-flex align-items-center"
+          className="btn-animated-album btn btn-secondary-custom d-flex align-items-center"
           onClick={() => setUploadPhotoModalOpen(true)}
         >
           <Upload size={16} className="me-1" />
@@ -123,9 +150,9 @@ const AlbumView = ({
       <div className="row g-3">
         {eventData.photos && eventData.photos.length > 0 ? (
           eventData.photos.map((photo) => (
-            <div key={photo.id} className="col-md-6 col-lg-3 ">
+            <div key={photo.id} className="col-md-6 col-lg-3">
               <div
-                className="card h-100 shadow-sm rounded-bottom-4"
+                className="card h-100 shadow-sm rounded-4 border-custom"
                 style={{ cursor: "pointer" }}
                 onClick={() => setSelectedPhoto(photo)}
               >
@@ -133,20 +160,20 @@ const AlbumView = ({
                   <img
                     src={photo.url}
                     alt=""
-                    className="card-img  h-100 object-fit-cover"
+                    className="card-img rounded-bottom-0 rounded-top-4 h-100 object-fit-cover"
                     onError={(e) => {
                       e.target.onerror = null;
                       e.target.src = "/api/placeholder/400/300";
                     }}
                   />
                 </div>
-                <div className="card-body bg-card-photo ">
+                <div className="card-body rounded-bottom-4 bg-card-photo">
                   <div className="d-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center gap-3">
                       <div className="d-flex align-items-center">
                         <Heart
                           className={`me-1 ${
-                            photo.likes ? "text-danger" : "text-muted"
+                            photo.likes ? "text-danger" : "text-muted-custom"
                           }`}
                           size={16}
                           onClick={(e) => {
@@ -158,7 +185,7 @@ const AlbumView = ({
                       </div>
                       <div className="d-flex align-items-center">
                         <MessageSquare
-                          className="me-1 text-primary"
+                          className="me-1 text-secondary-custom"
                           size={16}
                         />
                         <span className="small">
@@ -167,10 +194,10 @@ const AlbumView = ({
                       </div>
                     </div>
                     <button
-                      className="btn btn-sm btn-light"
-                      onClick={(e) => e.stopPropagation()}
+                      className="btn btn-sm border-custom btn-delete-custom"
+                      onClick={(e) => openDeleteModal(photo, e)}
                     >
-                      <MoreHorizontal size={16} />
+                      <Trash2 className="" size={16} />
                     </button>
                   </div>
                 </div>
@@ -179,10 +206,19 @@ const AlbumView = ({
           ))
         ) : (
           <div className="col-12 text-center py-4">
-            <p>Nessuna foto in questo album</p>
+            <p className="text-muted-custom">Nessuna foto in questo album</p>
           </div>
         )}
       </div>
+
+      {/* Modale di conferma eliminazione */}
+      {photoToDelete && (
+        <DeletePhotoModal
+          photo={photoToDelete}
+          onClose={closeDeleteModal}
+          onDelete={handlePhotoDelete}
+        />
+      )}
     </div>
   );
 };

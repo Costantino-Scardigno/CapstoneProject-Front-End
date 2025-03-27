@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-
+import { useLocation } from "react-router-dom";
 import DashboardHeader from "./DashboardHeader";
 import DashboardContent from "./DashboardContent";
-import UploadPhotoModal from "./UploadPhotoModal";
-import ShareAlbumModal from "./ShareAlbumModal";
-import "./Dashboard.css";
-import DashboardModal from "./DashboardModal";
-import DashboardFolders from "./DashboardFolders";
+import UploadPhotoModal from "./modals/UploadPhotoModal.jsx";
+import ShareAlbumModal from "./modals/ShareAlbumModal.jsx";
+import "./component_css/Dashboard.css";
+import DashboardModal from "./modals/DashboardModal.jsx";
+import DashboardTab from "./DashboardTab.jsx";
 
 const Dashboard = () => {
   // Stati principali
@@ -21,6 +21,8 @@ const Dashboard = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [noResults, setNoResults] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const location = useLocation();
+  const [loading, setLoading] = useState(true);
 
   // Stati per la condivisione
   const [shareModalOpen, setShareModalOpen] = useState(false);
@@ -33,6 +35,13 @@ const Dashboard = () => {
   // Stato per la foto selezionata
   const [selectedPhoto, setSelectedPhoto] = useState(null);
 
+  // Verifica se c'è un parametro per attivare la tab "shared"
+  useEffect(() => {
+    if (location.state?.activeTab) {
+      setActiveTab(location.state.activeTab);
+    }
+  }, [location]);
+
   // Funzione per aprire il modale di condivisione
   const openShareModal = (album) => {
     setAlbumToShare(album);
@@ -42,27 +51,17 @@ const Dashboard = () => {
   // Callback per il successo della condivisione
   const handleShareSuccess = () => {
     console.log("Album condiviso con successo");
-
     setRefreshTrigger((prev) => prev + 1);
   };
 
   // Funzione per eliminare un album
   const deleteAlbum = async (albumId) => {
-    // Chiede conferma prima di eliminare
-    if (
-      !window.confirm(
-        "Sei sicuro di voler eliminare questo album? Questa azione non può essere annullata."
-      )
-    ) {
-      return;
-    }
-
     const token = localStorage.getItem("authToken");
     if (!token) return;
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/events/${albumId}`,
+        `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/events/${albumId}`,
         {
           method: "DELETE",
           headers: {
@@ -93,7 +92,7 @@ const Dashboard = () => {
       console.log("Album eliminato con successo");
     } catch (error) {
       console.error("Errore durante l'eliminazione dell'album:", error);
-      alert("Si è verificato un errore durante l'eliminazione dell'album");
+      throw error; // Rilancia l'errore per gestirlo nel componente del modale
     }
   };
 
@@ -136,15 +135,19 @@ const Dashboard = () => {
 
   // Funzione per recuperare tutti gli album
   const fetchAllAlbums = () => {
+    setLoading(true); // Imposta loading a true all'inizio della fetch
     const token = localStorage.getItem("authToken");
 
-    fetch("http://localhost:8080/api/events?includeDetails=true", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    fetch(
+      "https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/events?includeDetails=true",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
       .then((response) => {
         if (!response.ok) {
           throw new Error("Errore nella richiesta!");
@@ -154,10 +157,12 @@ const Dashboard = () => {
       .then((data) => {
         console.log("Album caricati:", data);
         setAlbumsFetch(data);
-        setFilteredAlbums(data); // Inizializza anche gli album filtrati
+        setFilteredAlbums(data);
+        setLoading(false); // Imposta loading a false quando i dati sono caricati
       })
       .catch((error) => {
         console.error("Errore nel caricamento degli album:", error);
+        setLoading(false); // Imposta loading a false anche in caso di errore
       });
   };
 
@@ -166,13 +171,16 @@ const Dashboard = () => {
     setIsLoadingShared(true);
     const token = localStorage.getItem("authToken");
 
-    fetch("http://localhost:8080/api/events/shared?includeDetails=true", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    fetch(
+      "https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/events/shared?includeDetails=true",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
       .then((response) => {
         if (!response.ok) {
           throw new Error("Errore nel recupero degli album condivisi!");
@@ -235,7 +243,7 @@ const Dashboard = () => {
     try {
       // Verifica se la foto è già piaciuta per determinare l'azione da eseguire
       const checkResponse = await fetch(
-        `http://localhost:8080/api/likes/photo/${photoId}/status`,
+        `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/likes/photo/${photoId}/status`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -253,8 +261,8 @@ const Dashboard = () => {
       // Esegue l'azione (like o unlike)
       const response = await fetch(
         isLiked
-          ? `http://localhost:8080/api/likes/photo/${photoId}`
-          : `http://localhost:8080/api/likes`,
+          ? `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/likes/photo/${photoId}`
+          : `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/likes`,
         {
           method: isLiked ? "DELETE" : "POST",
           headers: {
@@ -282,17 +290,20 @@ const Dashboard = () => {
     if (!token) return;
 
     try {
-      const response = await fetch("http://localhost:8080/api/comments", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          content: commentText,
-          photoId: photoId,
-        }),
-      });
+      const response = await fetch(
+        "https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/comments",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            content: commentText,
+            photoId: photoId,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Errore nell'aggiunta del commento");
@@ -314,7 +325,7 @@ const Dashboard = () => {
       const token = localStorage.getItem("authToken");
 
       const response = await fetch(
-        `http://localhost:8080/api/events/${albumId}?includeDetails=true`,
+        `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/events/${albumId}?includeDetails=true`,
         {
           method: "GET",
           headers: {
@@ -357,14 +368,14 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="d-flex flex-column vh-100 bg-dashboard">
+    <div className="d-flex flex-column vh-100 bg-dashboard p-3">
       <DashboardHeader
         onSearch={handleSearch}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
       <div className="row">
-        <DashboardFolders
+        <DashboardTab
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           setSelectedAlbum={setSelectedAlbum}
@@ -373,6 +384,7 @@ const Dashboard = () => {
         <DashboardContent
           activeTab={activeTab}
           albums={filteredAlbums}
+          loading={loading}
           sharedAlbums={sharedAlbums}
           isLoadingShared={isLoadingShared}
           setUploadModalOpen={setUploadModalOpen}
@@ -393,7 +405,8 @@ const Dashboard = () => {
           deleteAlbum={deleteAlbum}
           noResults={noResults}
           resetSearch={resetSearch}
-          openShareModal={openShareModal} // Passa la funzione di condivisione
+          openShareModal={openShareModal}
+          setUploadedFiles={setUploadedFiles}
         />
       </div>
 

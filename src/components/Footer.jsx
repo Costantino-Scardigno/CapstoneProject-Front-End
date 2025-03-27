@@ -1,36 +1,27 @@
 import { BsInstagram } from "react-icons/bs";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaFacebookSquare } from "react-icons/fa";
+import logoImage from "../assets/Logo2.png";
 
 function Footer() {
   return (
     <footer className="py-4 bg-footer w-100 mt-5m ">
-      <div className="container">
-        {/* Sezione superiore con logo e link */}
-        <div className="row pb-3 border-bottom justify-content-center">
-          <div className="col-12 col-md-6 d-flex justify-content-center justify-content-md-center align-items-center mb-3 mb-md-0">
+      <div className="container-fluid">
+        <div className="pb-3 border-bottom d-flex  justify-content-sm-center ">
+          <div className="col-12 col-md-6  d-flex justify-content-center justify-content-md-center align-items-center mb-3 mb-md-0">
             <a
               href="#"
-              className="d-flex justify-content-center justify-content-md-start align-items-center gap-2 text-light text-decoration-none"
+              className="d-flex flex-column flex-sm-row justify-content-center justify-content-md-start align-items-center gap-2 text-light text-decoration-none"
             >
               <div className="d-flex align-items-center justify-content-center rounded-circle">
-                <img
-                  style={{
-                    width: "80px",
-                    height: "80px",
-                    backgroundColor: "rgba(255,255,255,0.3)",
-                  }}
-                  className="rounded-circle "
-                  src="https://i.pinimg.com/236x/d2/64/e3/d264e36c185da291cf7964ec3dfa37b8.jpg"
-                  alt=""
-                />
+                <img src={logoImage} className="w-75 m-0 " alt="" />
               </div>
               <span className="fs-3 fw-bold text-black">Scatti Festosi</span>
             </a>
           </div>
         </div>
 
-        {/* Sezione inferiore con informazioni e social */}
+        {/* Sezione  con informazioni e social */}
         <div className="row pt-3 justify-content-center justify-content-lg-between">
           <div className="col text-center d-flex flex-column flex-md-row align-items-center gap-2">
             <span>©2025 All rights reserved</span>

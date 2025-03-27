@@ -1,10 +1,12 @@
 // DashboardHeader.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, User, LogOut } from "lucide-react";
-
+import { Button, InputGroup } from "react-bootstrap";
+import logoImage from "../assets/Logo.png";
 const DashboardHeader = ({ onSearch, searchQuery, setSearchQuery }) => {
-  const [showDropdown, setShowDropdown] = React.useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   const toggleDropdown = () => {
@@ -12,7 +14,7 @@ const DashboardHeader = ({ onSearch, searchQuery, setSearchQuery }) => {
   };
 
   const handleLogout = () => {
-    // Rimuovi il token di autenticazione
+    // Rimuove il token di autenticazione
     localStorage.removeItem("authToken");
     // Reindirizza alla home page
     navigate("/");
@@ -32,50 +34,110 @@ const DashboardHeader = ({ onSearch, searchQuery, setSearchQuery }) => {
     }
   };
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+
+        if (!token) {
+          console.error("Token non trovato");
+          navigate("/"); // Reindirizza al login se il token non esiste
+          return;
+        }
+
+        const tokenParts = token.split(".");
+        if (tokenParts.length !== 3) {
+          throw new Error("Token non valido");
+        }
+
+        const payload = JSON.parse(atob(tokenParts[1]));
+        const username = payload.sub || payload.username;
+
+        if (!username) {
+          throw new Error("Impossibile recuperare le informazioni utente");
+        }
+
+        const response = await fetch(
+          `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/users/${username}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          console.error("Errore API:", response.status);
+          if (response.status === 401) {
+            // Gestione specifica per errori di autenticazione
+            localStorage.removeItem("authToken");
+            navigate("/");
+            return;
+          }
+          throw new Error("Errore nel recupero delle informazioni utente");
+        }
+
+        const userData = await response.json();
+        setUser(userData);
+      } catch (error) {
+        console.error("Errore nel recupero dati utente:", error);
+
+        setUser(null);
+      }
+    };
+
+    fetchUserData();
+  }, [navigate]);
+
   return (
-    <header className="container-fluid px-4 py-3 bg-dashboard   border-bottom ">
-      <div className="d-flex justify-content-between align-items-center">
-        <Link className="text-decoration-none fs-2 text-dark" to="/">
-          ScattiFestosi
+    <nav className="px-0 py-2 bg-dashboard">
+      <div className="d-flex flex-column flex-sm-row justify-content-between align-items-center">
+        <Link className="text-decoration-none fs-2 text-primary-custom" to="/">
+          <img className="w-50" src={logoImage} alt="" />
         </Link>
-        <div className="d-flex align-items-center ">
-          <div className="position-relative me-3 ">
+        <div className="d-flex align-items-center my-3">
+          <div className="me-3">
             <form onSubmit={handleSearchSubmit}>
-              <input
-                type="text"
-                placeholder="Cerca album o foto..."
-                className="form-control ps-4"
-                value={searchQuery}
-                onChange={handleSearchChange}
-              />
-              <span
-                className="position-absolute"
-                style={{
-                  left: "5px",
-                  top: "49%",
-                  transform: "translateY(-50%)",
-                }}
-              >
-                <Search className="text-secondary" size={18} />
-              </span>
+              <InputGroup className="d-flex align-items-center">
+                <Button variant="outline-daek" className="btn-primary-custom">
+                  <Search className="text-muted-custom " size={18} />
+                </Button>
+                <input
+                  type="text"
+                  placeholder="Cerca album o foto..."
+                  className="form-control ps-4"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+              </InputGroup>
             </form>
           </div>
           <div className="position-relative">
             <div
-              className="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center cursor-pointer"
+              className="rounded-circle bg-secondary-custom d-flex align-items-center justify-content-center cursor-pointer"
               style={{ width: "40px", height: "40px", cursor: "pointer" }}
               onClick={toggleDropdown}
             >
-              <User className="text-primary" size={20} />
+              {user && user.profileImage ? (
+                <img
+                  src={user.profileImage}
+                  alt="immagine di profilo"
+                  className="w-100 h-100 rounded-circle object-fit-cover"
+                />
+              ) : (
+                <User size={24} className="text-white-custom" />
+              )}
             </div>
 
             {showDropdown && (
               <div
-                className="position-absolute end-0 mt-2 py-2 bg-white rounded shadow-sm"
+                className="position-absolute end-0 mt-2 py-2 bg-white-custom rounded shadow-sm"
                 style={{ width: "150px", zIndex: 1000 }}
               >
                 <button
-                  className="dropdown-item d-flex align-items-center px-3 py-2"
+                  className="dropdown-item d-flex align-items-center px-3 py-2 text-primary-custom"
                   onClick={handleLogout}
                 >
                   <LogOut size={16} className="me-2" />
@@ -86,7 +148,7 @@ const DashboardHeader = ({ onSearch, searchQuery, setSearchQuery }) => {
           </div>
         </div>
       </div>
-    </header>
+    </nav>
   );
 };
 

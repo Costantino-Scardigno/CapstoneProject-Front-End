@@ -1,15 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
 import {
-  Image,
   Heart,
   MessageSquare,
   Share2,
   User,
   Send,
-  Loader,
   ArrowLeft,
   Trash2,
 } from "lucide-react";
+import DeleteCommentModal from "./modals/DeleteCommentModal";
+import PhotoViewSkeleton from "./Skeleton/PhotoViewSkeleton";
 
 const PhotoView = ({
   selectedPhoto,
@@ -22,10 +22,18 @@ const PhotoView = ({
   refreshTrigger,
   deleteComment,
 }) => {
+  // Stati generali
   const [photoDetails, setPhotoDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isLiked, setIsLiked] = useState(false); // Stato per tracciare se l'utente ha messo like
+  const [isLiked, setIsLiked] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Stato per il modale di conferma eliminazione
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [commentToDelete, setCommentToDelete] = useState(null);
+  const [deletingComment, setDeletingComment] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
 
   // Stato per la gestione dei commenti con paginazione
   const [displayedComments, setDisplayedComments] = useState([]);
@@ -36,6 +44,62 @@ const PhotoView = ({
 
   // Ref per il contenitore dei commenti
   const commentsContainerRef = useRef(null);
+  const FormCommentRef = useRef(null);
+
+  // Effetto per ottenere le informazioni dell'utente corrente
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) return;
+
+    // Prima dobbiamo decodificare il token JWT per ottenere il nome utente
+    try {
+      const tokenParts = token.split(".");
+      if (tokenParts.length !== 3) {
+        console.error("Token JWT non valido");
+        return;
+      }
+
+      // Decodifica la parte payload (seconda parte) del token
+      const payload = JSON.parse(atob(tokenParts[1]));
+      const username = payload.sub || payload.username;
+
+      if (!username) {
+        console.error("Nome utente non trovato nel token");
+        return;
+      }
+
+      fetch(
+        `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/users/${username}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Errore nel recupero delle informazioni utente");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setCurrentUser({
+            ...data,
+            username: username,
+          });
+        })
+        .catch((error) => {
+          console.error(
+            "Errore nel recupero delle informazioni utente:",
+            error
+          );
+        });
+    } catch (error) {
+      console.error("Errore nella decodifica del token:", error);
+    }
+  }, []);
 
   // Effetto per caricare i dettagli della foto
   useEffect(() => {
@@ -48,7 +112,7 @@ const PhotoView = ({
     const token = localStorage.getItem("authToken");
 
     fetch(
-      `http://localhost:8080/api/photos/${selectedPhoto.id}?includeDetails=true`,
+      `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/photos/${selectedPhoto.id}?includeDetails=true`,
       {
         method: "GET",
         headers: {
@@ -89,12 +153,15 @@ const PhotoView = ({
   const checkLikeStatus = (photoId) => {
     const token = localStorage.getItem("authToken");
 
-    fetch(`http://localhost:8080/api/likes/photo/${photoId}/status`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    fetch(
+      `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/likes/photo/${photoId}/status`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
       .then((response) => {
         if (!response.ok) {
           throw new Error("Errore nel verificare lo stato del like");
@@ -108,6 +175,19 @@ const PhotoView = ({
       .catch((error) => {
         console.error("Errore nel verificare lo stato del like:", error);
       });
+  };
+
+  // Funzione per verificare se l'utente corrente è l'autore del commento
+  const isCommentAuthor = (comment) => {
+    if (!currentUser) return false;
+
+    // Confronta l'ID utente o username
+    return (
+      (comment.userId && currentUser.id && comment.userId === currentUser.id) ||
+      (comment.username &&
+        currentUser.username &&
+        comment.username === currentUser.username)
+    );
   };
 
   // Funzione per gestire il click sul pulsante like
@@ -133,6 +213,11 @@ const PhotoView = ({
     setCurrentPage(nextPage);
     setHasMoreComments(endIndex < allComments.length);
     setLoadingMoreComments(false);
+  };
+
+  //Scroll al Form per commentare
+  const handleClickCommentButton = () => {
+    FormCommentRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   // Evento scroll
@@ -172,52 +257,78 @@ const PhotoView = ({
     addComment(selectedPhoto.id, newComment);
   };
 
+  // Apre il modale di conferma
+  const openDeleteModal = (comment) => {
+    setCommentToDelete(comment);
+    setShowDeleteModal(true);
+    setDeleteError(null);
+  };
+
+  // Chiude il modale di conferma
+  const closeDeleteModal = () => {
+    setCommentToDelete(null);
+    setShowDeleteModal(false);
+    setDeleteError(null);
+  };
+
   // Gestisce l'eliminazione di un commento
-  const handleDeleteComment = (commentId) => {
-    if (!commentId) return;
+  const handleDeleteComment = () => {
+    if (!commentToDelete || !commentToDelete.id) return;
 
-    if (window.confirm("Sei sicuro di voler eliminare questo commento?")) {
-      // Recupera il token dal localStorage
-      const token = localStorage.getItem("authToken");
+    setDeletingComment(true);
+    setDeleteError(null);
 
-      fetch(`http://localhost:8080/api/comments/${commentId}`, {
+    // Recupera il token dal localStorage
+    const token = localStorage.getItem("authToken");
+
+    fetch(
+      `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/comments/${commentToDelete.id}`,
+      {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Errore nell'eliminazione del commento");
+        }
+        // Aggiorna la lista dei commenti visualizzati rimuovendo quello eliminato
+        setDisplayedComments(
+          displayedComments.filter(
+            (comment) => comment.id !== commentToDelete.id
+          )
+        );
+
+        // Se ci sono più commenti disponibili, aggiorna anche i dettagli della foto
+        if (photoDetails && photoDetails.comments) {
+          const updatedComments = photoDetails.comments.filter(
+            (comment) => comment.id !== commentToDelete.id
+          );
+          setPhotoDetails({
+            ...photoDetails,
+            comments: updatedComments,
+          });
+        }
+
+        if (typeof deleteComment === "function") {
+          deleteComment(commentToDelete.id);
+        }
+
+        // Chiude il modale
+        closeDeleteModal();
       })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Errore nell'eliminazione del commento");
-          }
-          // Aggiorna la lista dei commenti visualizzati rimuovendo quello eliminato
-          setDisplayedComments(
-            displayedComments.filter((comment) => comment.id !== commentId)
-          );
-
-          // Se ci sono più commenti disponibili, aggiorna anche i dettagli della foto
-          if (photoDetails && photoDetails.comments) {
-            const updatedComments = photoDetails.comments.filter(
-              (comment) => comment.id !== commentId
-            );
-            setPhotoDetails({
-              ...photoDetails,
-              comments: updatedComments,
-            });
-          }
-
-          if (typeof deleteComment === "function") {
-            deleteComment(commentId);
-          }
-        })
-        .catch((error) => {
-          console.error("Errore nell'eliminazione del commento:", error);
-          alert(
-            "Non è stato possibile eliminare il commento: " + error.message
-          );
-        });
-    }
+      .catch((error) => {
+        console.error("Errore nell'eliminazione del commento:", error);
+        setDeleteError(
+          "Non è stato possibile eliminare il commento: " + error.message
+        );
+      })
+      .finally(() => {
+        setDeletingComment(false);
+      });
   };
 
   // Formatta la data in modo leggibile
@@ -232,31 +343,19 @@ const PhotoView = ({
     });
   };
 
-  // Mostra un indicatore di caricamento
+  // Mostra  indicatore di caricamento
   if (loading) {
-    return (
-      <div className="card shadow-sm">
-        <div
-          className="card-body d-flex justify-content-center align-items-center"
-          style={{ minHeight: "400px" }}
-        >
-          <div className="text-center">
-            <Loader className="animate-spin mb-3" size={40} />
-            <p>Caricamento dettagli foto...</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <PhotoViewSkeleton />;
   }
 
   // Mostra eventuali errori
   if (error) {
     return (
-      <div className="card shadow-sm">
+      <div className="card shadow-sm border-custom">
         <div className="card-body">
           <div className="alert alert-danger">{error}</div>
           <button
-            className="btn btn-outline-secondary"
+            className="btn btn-outline-custom"
             onClick={() => setSelectedPhoto(null)}
           >
             Torna all'album
@@ -278,15 +377,17 @@ const PhotoView = ({
       : 0;
 
   return (
-    <div className="card shadow-sm">
-      <div className="card-header bg-dashboard d-flex align-items-center">
+    <div className="card shadow-sm border-custom rounded-top-5">
+      <div className="card-header rounded-top-5 bg-dashboard d-flex align-items-center">
         <button
           className="bg-dashboard border-0 rounded-circle me-2"
           onClick={() => setSelectedPhoto(null)}
         >
-          <ArrowLeft size={30} color="#5b8fd2" />
+          <ArrowLeft size={30} color="#e1bb80" />
         </button>
-        <h5 className="mb-0">Foto da {selectedAlbum.name}</h5>
+        <h5 className="mb-0 text-primary-custom">
+          Foto da {selectedAlbum.name}
+        </h5>
       </div>
 
       <div className="row g-0">
@@ -303,32 +404,38 @@ const PhotoView = ({
               }}
             />
           </div>
-          <div className="bg-dashboard border-top border-bottom p-3">
+          <div className="bg-dashboard p-3">
             <div className="d-flex justify-content-between align-items-center">
               <div className="d-flex align-items-center gap-3">
                 <button
                   className={`btn btn-sm ${
-                    isLiked ? "text-danger" : "text-muted"
+                    isLiked ? "text-danger" : "text-muted-custom"
                   } d-flex align-items-center d-flex flex-column flex-md-row`}
                   onClick={handleToggleLike}
                 >
                   <Heart
-                    className="me-1 "
+                    className="me-1"
                     size={18}
                     fill={isLiked ? "currentColor" : "none"}
                   />
                   <span>{likesCount} mi piace</span>
                 </button>
-                <button className="btn btn-sm text-muted d-flex align-items-center d-flex flex-column flex-md-row">
-                  <MessageSquare className="me-1 text-primary" size={18} />
+                <button
+                  onClick={handleClickCommentButton}
+                  className="btn btn-sm text-muted-custom d-flex align-items-center d-flex flex-column flex-md-row"
+                >
+                  <MessageSquare
+                    className="me-1 text-secondary-custom"
+                    size={18}
+                  />
                   <span>{comments.length} commenti</span>
                 </button>
               </div>
               <div className="d-flex align-items-center gap-2">
-                <small className="text-muted">
+                <small className="d-none d-sm-inline text-muted-custom">
                   {formatDate(photo.timestamp)}
                 </small>
-                <button className="btn btn-sm text-muted">
+                <button className="btn btn-sm text-muted-custom">
                   <Share2 size={18} />
                 </button>
               </div>
@@ -337,7 +444,7 @@ const PhotoView = ({
         </div>
 
         <div
-          className="col-md-4 bg-dashboard border-start d-flex flex-column"
+          className="col-md-4 bg-dashboard d-flex flex-column"
           style={{ minHeight: "300px" }}
         >
           <div
@@ -345,9 +452,9 @@ const PhotoView = ({
             ref={commentsContainerRef}
             style={{ maxHeight: "568px" }}
           >
-            <h6 className="mb-3">Commenti</h6>
+            <h6 className="mb-3 text-primary-custom">Commenti</h6>
             {displayedComments.length === 0 ? (
-              <p className="text-muted text-center my-5">
+              <p className="text-muted-custom text-center my-5">
                 Nessun commento. Sii il primo a commentare!
               </p>
             ) : (
@@ -355,40 +462,51 @@ const PhotoView = ({
                 {displayedComments.map((comment) => (
                   <div
                     key={comment.id}
-                    className="d-flex justify-content-between align-items-start"
+                    className="d-flex justify-content-between align-items-start border-start border-bottom border-top border-end p-3 rounded-5 shadow-sm"
                   >
                     <div className="d-flex">
                       <div
-                        className="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center me-2"
+                        className="rounded-circle bg-secondary-custom d-flex align-items-center justify-content-center me-2"
                         style={{ width: "32px", height: "32px" }}
                       >
-                        <User size={16} className="text-primary" />
+                        {comment.profileImage ? (
+                          <img
+                            src={comment.profileImage}
+                            alt="immagine di profilo"
+                            className="w-100 h-100 rounded-circle object-fit-cover"
+                          />
+                        ) : (
+                          <User size={24} className="text-white-custom" />
+                        )}
                       </div>
                       <div>
                         <div>
-                          <span className="small fw-medium">
+                          <span className="small fw-medium text-primary-custom">
                             {comment.username || comment.user}
                           </span>
                           <span
-                            className="ms-2 text-muted"
+                            className="ms-2 text-muted-custom"
                             style={{ fontSize: "0.75rem" }}
                           >
                             {formatDate(comment.createdAt) || comment.time}
                           </span>
                         </div>
-                        <p className="mb-0 small">
+                        <p className="mb-0 small text-primary-custom">
                           {comment.content || comment.text}
                         </p>
                       </div>
                     </div>
                     <div>
-                      <button
-                        className="btn btn-sm text-danger p-0"
-                        onClick={() => handleDeleteComment(comment.id)}
-                        title="Elimina commento"
-                      >
-                        <Trash2 size={14} />
-                      </button>
+                      {/* Mostra il pulsante di eliminazione solo se l'utente è l'autore del commento */}
+                      {isCommentAuthor(comment) && (
+                        <button
+                          className="btn btn-sm text-danger p-0"
+                          onClick={() => openDeleteModal(comment)}
+                          title="Elimina commento"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -396,7 +514,7 @@ const PhotoView = ({
                 {loadingMoreComments && (
                   <div className="text-center py-2">
                     <div
-                      className="spinner-border spinner-border-sm text-secondary"
+                      className="spinner-border spinner-border-sm text-secondary-custom"
                       role="status"
                     >
                       <span className="visually-hidden">Caricamento...</span>
@@ -407,19 +525,19 @@ const PhotoView = ({
             )}
           </div>
 
-          <div className="p-3 border-top">
-            <div className="d-flex">
+          <div className="p-3 mt-4 border-top">
+            <div className="d-flex align-items-center">
               <div
-                className="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center me-2"
+                className="rounded-circle bg-secondary-custom d-flex align-items-center justify-content-center me-2"
                 style={{ width: "32px", height: "32px" }}
               >
-                <User size={16} className="text-primary" />
+                <User size={16} className="text-primary-custom" />
               </div>
-              <div className="input-group ">
+              <div ref={FormCommentRef} className="input-group">
                 <input
                   type="text"
                   placeholder="Aggiungi un commento..."
-                  className="form-control rounded-pill pe-4 rounded-end-0  "
+                  className="form-control rounded-pill pe-4 rounded-end-0"
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   onKeyUp={(e) => {
@@ -430,11 +548,11 @@ const PhotoView = ({
                 />
                 <div className="input-group-append">
                   <button
-                    className="btn rounded-end-4 border-start-0 rounded-top-0 rounded-start-0 border-primary-subtle bg-white"
+                    className="btn rounded-end-4 border-start-0 rounded-top-0 rounded-start-0 border-custom bg-white-custom"
                     onClick={handleAddComment}
                     disabled={!newComment.trim()}
                   >
-                    <Send size={16} />
+                    <Send size={16} className="text-secondary-custom" />
                   </button>
                 </div>
               </div>
@@ -442,6 +560,16 @@ const PhotoView = ({
           </div>
         </div>
       </div>
+
+      {/* Modale per l'eliminazione del commento */}
+      <DeleteCommentModal
+        isOpen={showDeleteModal}
+        onClose={closeDeleteModal}
+        onConfirm={handleDeleteComment}
+        comment={commentToDelete}
+        isDeleting={deletingComment}
+        error={deleteError}
+      />
     </div>
   );
 };

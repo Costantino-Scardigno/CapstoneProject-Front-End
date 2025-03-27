@@ -1,0 +1,23 @@
+.h-review {
+  background-color: #f8f3ea !important;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: 5%;
+}
+
+.carousel-control-prev:hover .text-primary-custom,
+.carousel-control-next:hover .text-primary-custom {
+  color: #e1bb80 !important;
+  transform: scale(1.1);
+  transition: all 0.3s ease;
+}
+
+.pt-6 {
+  padding-top: 6rem;
+}
+
+.mt-5m {
+  margin-top: 5rem;
+}

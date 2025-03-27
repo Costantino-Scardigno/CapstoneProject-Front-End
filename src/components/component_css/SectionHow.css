@@ -1,0 +1,16 @@
+.fixed-height {
+  height: 500px;
+}
+
+@media (min-width: 426px) and (max-width: 1199px) {
+  .fixed-height {
+    height: 300px;
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 425px) {
+  .fixed-height {
+    height: 320px;
+  }
+}

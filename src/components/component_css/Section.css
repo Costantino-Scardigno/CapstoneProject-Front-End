@@ -1,0 +1,11 @@
+.responsive-icon {
+  width: 40px;
+  height: 40px;
+}
+
+@media (min-width: 300px) and (max-width: 425px) {
+  .responsive-icon {
+    width: 30px;
+    height: 30px;
+  }
+}
