@@ -31,7 +31,7 @@ function MyNavbar({ setShowForm }) {
             </Nav.Link>
             <Nav.Link
               className="fs-3 btn-animated text-primary-custom nav-link-custom mt-2 mt-xl-0"
-              href="#recensioni"
+              href="#reviewCarousel"
             >
               Recensioni
             </Nav.Link>

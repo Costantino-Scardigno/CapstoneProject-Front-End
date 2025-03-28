@@ -61,8 +61,8 @@ function SectionHow() {
               </div>
               <div>
                 <p className="fs-3 text-primary-custom">
-                  Gli ospiti caricano foto e video che vanno direttamente
-                  nell'album condiviso
+                  Gli ospiti caricano foto che vanno direttamente nell'album
+                  condiviso
                 </p>
               </div>
             </div>

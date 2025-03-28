@@ -15,9 +15,10 @@ function Form({ show, onClose }) {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
 
-  // Stato per messaggi di errore
+  // Stato per messaggi di errore e successo
   const [loginError, setLoginError] = useState("");
   const [registerError, setRegisterError] = useState("");
+  const [registerSuccess, setRegisterSucces] = useState("");
 
   // Stato per l'elaborazione
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -225,13 +226,13 @@ function Form({ show, onClose }) {
         }
       }
 
-      console.log("Registrazione avvenuta con successo:", data);
-
       // Mostra un messaggio di successo e passa al form di login
-      alert(
-        "Registrazione completata con successo! Ora puoi effettuare il login."
-      );
-      setActiveForm("login");
+      setRegisterSucces("Registrazzione avvenuta con successo!");
+
+      setTimeout(() => {
+        setRegisterSucces("");
+        setActiveForm("login");
+      }, 2000);
 
       // Resetta i campi del form di registrazione
       setRegisterUsername("");
@@ -289,7 +290,6 @@ function Form({ show, onClose }) {
                     style={{ width: "50%", paddingRight: "15px" }}
                   >
                     <form
-                      className="w-75"
                       onSubmit={(e) => {
                         e.preventDefault();
                         Register();
@@ -298,6 +298,11 @@ function Form({ show, onClose }) {
                       {registerError && (
                         <div className="alert alert-danger" role="alert">
                           {registerError}
+                        </div>
+                      )}
+                      {registerSuccess && (
+                        <div className="alert alert-success mt-3" role="alert">
+                          {registerSuccess}
                         </div>
                       )}
                       <div className="d-flex flex-column mb-3">
@@ -387,7 +392,6 @@ function Form({ show, onClose }) {
                         e.preventDefault();
                         Login();
                       }}
-                      className="w-75"
                     >
                       {loginError && (
                         <div className="alert alert-danger" role="alert">
