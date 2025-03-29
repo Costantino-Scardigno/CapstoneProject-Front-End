@@ -26,7 +26,7 @@ function Form({ show, onClose }) {
 
   useEffect(() => {
     // Se c'è un pendingShareCode, mostra il form di login
-    if (localStorage.getItem("pendingShareCode")) {
+    if (sessionStorage.getItem("pendingShareCode")) {
       setActiveForm("login");
     }
   }, [show]);
@@ -49,13 +49,13 @@ function Form({ show, onClose }) {
 
   // Funzione per gestire il reindirizzamento dopo il login
   const handlePostLoginRedirect = () => {
-    const pendingShareCode = localStorage.getItem("pendingShareCode");
+    const pendingShareCode = sessionStorage.getItem("pendingShareCode");
 
     if (pendingShareCode) {
       // Se c'è un codice di condivisione in attesa, reindirizza alla pagina dell'album
       navigate(`/album/share/${pendingShareCode}`);
       // Rimuovi il codice di condivisione pendente
-      localStorage.removeItem("pendingShareCode");
+      sessionStorage.removeItem("pendingShareCode");
     } else {
       // Altrimenti, va alla dashboard
       navigate("/dashboard");
@@ -118,7 +118,7 @@ function Form({ show, onClose }) {
       }
 
       // Login riuscito
-      localStorage.setItem("authToken", data.token);
+      sessionStorage.setItem("authToken", data.token);
       console.log("Login avvenuto con successo:");
 
       // Reindirizza l'utente dopo il login
@@ -400,7 +400,7 @@ function Form({ show, onClose }) {
                       )}
 
                       {/* Mostra un messaggio se c'è un album condiviso in attesa */}
-                      {localStorage.getItem("pendingShareCode") && (
+                      {sessionStorage.getItem("pendingShareCode") && (
                         <div className="alert alert-info mb-3" role="alert">
                           <p className="mb-1 fw-bold">
                             Accedi per visualizzare l'album condiviso

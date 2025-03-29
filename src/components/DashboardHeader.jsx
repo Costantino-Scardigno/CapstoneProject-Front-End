@@ -15,7 +15,7 @@ const DashboardHeader = ({ onSearch, searchQuery, setSearchQuery }) => {
 
   const handleLogout = () => {
     // Rimuove il token di autenticazione
-    localStorage.removeItem("authToken");
+    sessionStorage.removeItem("authToken");
     // Reindirizza alla home page
     navigate("/");
   };
@@ -37,7 +37,7 @@ const DashboardHeader = ({ onSearch, searchQuery, setSearchQuery }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem("authToken");
+        const token = sessionStorage.getItem("authToken");
 
         if (!token) {
           console.error("Token non trovato");
@@ -72,7 +72,7 @@ const DashboardHeader = ({ onSearch, searchQuery, setSearchQuery }) => {
           console.error("Errore API:", response.status);
           if (response.status === 401) {
             // Gestione specifica per errori di autenticazione
-            localStorage.removeItem("authToken");
+            sessionStorage.removeItem("authToken");
             navigate("/");
             return;
           }

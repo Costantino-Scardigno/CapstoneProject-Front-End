@@ -29,8 +29,8 @@ const UploadTab = ({
     setUploadLoading(true);
 
     try {
-      // Recupera il token dal localStorage
-      const token = localStorage.getItem("authToken");
+      // Recupera il token dal sessionStorage
+      const token = sessionStorage.getItem("authToken");
 
       if (!token) {
         throw new Error(

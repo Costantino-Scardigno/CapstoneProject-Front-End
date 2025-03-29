@@ -56,7 +56,7 @@ const Dashboard = () => {
 
   // Funzione per eliminare un album
   const deleteAlbum = async (albumId) => {
-    const token = localStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken");
     if (!token) return;
 
     try {
@@ -136,7 +136,7 @@ const Dashboard = () => {
   // Funzione per recuperare tutti gli album
   const fetchAllAlbums = () => {
     setLoading(true); // Imposta loading a true all'inizio della fetch
-    const token = localStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken");
 
     fetch(
       "https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/events?includeDetails=true",
@@ -169,7 +169,7 @@ const Dashboard = () => {
   // Funzione per recuperare gli album condivisi
   const fetchSharedAlbums = () => {
     setIsLoadingShared(true);
-    const token = localStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken");
 
     fetch(
       "https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/events/shared?includeDetails=true",
@@ -237,7 +237,7 @@ const Dashboard = () => {
   };
 
   const toggleLike = async (photoId) => {
-    const token = localStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken");
     if (!token) return;
 
     try {
@@ -286,7 +286,7 @@ const Dashboard = () => {
   const addComment = async (photoId, commentText) => {
     if (!commentText.trim()) return;
 
-    const token = localStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken");
     if (!token) return;
 
     try {
@@ -322,7 +322,7 @@ const Dashboard = () => {
   // Funzione per aggiornare i dati di un album specifico
   const refreshAlbumData = async (albumId) => {
     try {
-      const token = localStorage.getItem("authToken");
+      const token = sessionStorage.getItem("authToken");
 
       const response = await fetch(
         `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/events/${albumId}?includeDetails=true`,

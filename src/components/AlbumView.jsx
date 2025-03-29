@@ -34,7 +34,7 @@ const AlbumView = ({
     }
 
     // Recupera il token dal localStorage
-    const token = localStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken");
     setLoading(true);
 
     fetch(

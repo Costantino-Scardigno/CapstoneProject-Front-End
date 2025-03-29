@@ -34,7 +34,7 @@ const SettingsTab = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       setLoading(true);
-      const token = localStorage.getItem("authToken");
+      const token = sessionStorage.getItem("authToken");
 
       if (!token) {
         setError("Sessione scaduta, effettua nuovamente il login");
@@ -151,7 +151,7 @@ const SettingsTab = () => {
     setSuccessMessage(null);
     setError(null);
 
-    const token = localStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken");
     if (!token) {
       setError("Sessione scaduta, effettua nuovamente il login");
       setFormSubmitting(false);

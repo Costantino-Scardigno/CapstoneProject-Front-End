@@ -12,11 +12,11 @@ const SharedAlbumView = () => {
 
   useEffect(() => {
     // Verifica se l'utente è autenticato
-    const authToken = localStorage.getItem("authToken");
+    const authToken = sessionStorage.getItem("authToken");
 
     if (!authToken) {
       // Se non è autenticato, salva il codice di condivisione e reindirizza alla home
-      localStorage.setItem("pendingShareCode", shareCode);
+      sessionStorage.setItem("pendingShareCode", shareCode);
       navigate("/", { state: { openLoginForm: true } });
       return;
     }
@@ -36,7 +36,7 @@ const SharedAlbumView = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            Authorization: `Bearer ${sessionStorage.getItem("authToken")}`,
           },
         }
       );
@@ -46,7 +46,7 @@ const SharedAlbumView = () => {
           throw new Error("Album non trovato");
         } else if (response.status === 401) {
           // Se non autorizzato, reindirizza al login
-          localStorage.setItem("pendingShareCode", shareCode);
+          sessionStorage.setItem("pendingShareCode", shareCode);
           navigate("/", { state: { openLoginForm: true } });
           return;
         }
@@ -68,7 +68,7 @@ const SharedAlbumView = () => {
 
   // Funzione per salvare l'album condiviso all'utente corrente
   const saveSharedAlbumToUser = async (albumId) => {
-    const authToken = localStorage.getItem("authToken");
+    const authToken = sessionStorage.getItem("authToken");
     if (!authToken || !albumId) return;
 
     try {

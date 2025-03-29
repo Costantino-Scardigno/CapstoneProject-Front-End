@@ -19,7 +19,7 @@ const DeletePhotoModal = ({ photo, onClose, onDelete }) => {
     setDeleteError(null);
 
     try {
-      const token = localStorage.getItem("authToken");
+      const token = sessionStorage.getItem("authToken");
       const response = await fetch(
         `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/photos/${photo.id}`,
         {

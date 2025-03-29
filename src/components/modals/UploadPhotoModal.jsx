@@ -39,7 +39,7 @@ const UploadPhotoModal = ({
       return;
     }
 
-    const token = localStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken");
     if (!token) {
       setError("Sessione scaduta. Effettua nuovamente il login.");
       return;

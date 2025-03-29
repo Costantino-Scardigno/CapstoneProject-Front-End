@@ -48,7 +48,7 @@ const PhotoView = ({
 
   // Effetto per ottenere le informazioni dell'utente corrente
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken");
     if (!token) return;
 
     // Prima dobbiamo decodificare il token JWT per ottenere il nome utente
@@ -108,8 +108,8 @@ const PhotoView = ({
       return;
     }
 
-    // Recupera il token dal localStorage
-    const token = localStorage.getItem("authToken");
+    // Recupera il token dal sessionStorage
+    const token = sessionStorage.getItem("authToken");
 
     fetch(
       `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/photos/${selectedPhoto.id}?includeDetails=true`,
@@ -151,7 +151,7 @@ const PhotoView = ({
 
   // Funzione per verificare se l'utente ha messo like alla foto
   const checkLikeStatus = (photoId) => {
-    const token = localStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken");
 
     fetch(
       `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/likes/photo/${photoId}/status`,
@@ -278,8 +278,8 @@ const PhotoView = ({
     setDeletingComment(true);
     setDeleteError(null);
 
-    // Recupera il token dal localStorage
-    const token = localStorage.getItem("authToken");
+    // Recupera il token dal sessionStorage
+    const token = sessionStorage.getItem("authToken");
 
     fetch(
       `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/comments/${commentToDelete.id}`,
