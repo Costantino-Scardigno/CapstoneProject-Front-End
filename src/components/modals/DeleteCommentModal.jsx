@@ -106,8 +106,14 @@ const DeleteCommentModal = ({
             >
               {isDeleting ? (
                 <>
-                  <Loader size={16} className="me-2 animate-spin" />
-                  <span>Eliminazione...</span>
+                  <span>
+                    <span
+                      className="spinner-border spinner-border-sm me-2"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                    Eliminazione...
+                  </span>
                 </>
               ) : (
                 <>

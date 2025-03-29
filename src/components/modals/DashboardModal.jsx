@@ -117,12 +117,7 @@ const DashboardModal = ({
   return (
     <>
       {/* Modale */}
-      <div
-        id="modale"
-        className="modal animation"
-        style={{ display: "block" }}
-        tabIndex="-1"
-      >
+      <div id="modale" className="modal animation d-block" tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content rounded-top-4 bg-light-custom">
             <div className="modal-header rounded-top-4 bg-secondary-custom">
@@ -251,8 +246,14 @@ const DashboardModal = ({
               >
                 {loading ? (
                   <>
-                    <Loader size={16} className="me-2 animate-spin" />
-                    <span>Creazione in corso...</span>
+                    <span>
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
+                      Creazione album...
+                    </span>
                   </>
                 ) : (
                   <>

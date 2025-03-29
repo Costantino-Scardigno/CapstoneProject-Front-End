@@ -86,7 +86,7 @@ const UploadTab = ({
   };
 
   return (
-    <div className="card bg-white-custom shadow-sm border-custom">
+    <div className="card bg-white-custom shadow-sm border-custom ">
       <div className="card-body">
         <div className="d-flex align-items-center justify-content-between mb-4">
           <h3 className="h5 mb-0 text-primary-custom">Carica nuove foto</h3>
@@ -103,7 +103,7 @@ const UploadTab = ({
           </select>
         </div>
 
-        <div className="border-dashed-custom rounded p-5 text-center">
+        <div className="border-dashed-custom rounded p-5 text-center ">
           <div className="d-flex flex-column align-items-center">
             <Camera size={48} className="text-secondary-custom mb-3" />
             <p className="text-muted-custom mb-2">Trascina qui le tue foto o</p>

@@ -1,12 +1,31 @@
-# React + Vite
+# ScattiFestosi 🎊📷
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+                                                              Descrizione Generale
 
-Currently, two official plugins are available:
+"ScattiFestosi" è una web application pensata per eventi, matrimoni 💍 e feste 🎉, in cui gli ospiti possono condividere foto in un album comune in tempo reale ⏳.
+L'obiettivo è creare un ricordo collettivo 📖✨ e interattivo, dove ogni partecipante contribuisce con le proprie immagini.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+                              Tecnologie Utilizzate
 
-## Expanding the ESLint configuration
+🚀 Front-end: React ⚛️ – per un'interfaccia utente dinamica, responsive e interattiva.
+🛠️ Back-end: Spring Boot ☕ – per gestire l'API REST, la logica di business e la sicurezza 🔒 (JWT, Spring Security).
+📊 Database: PostgreSQL 🗄️ – per memorizzare i dati relativi a utenti, eventi e foto.
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+                             Funzionalità Principali:
+
+✅ Registrazione e Autenticazione 🔑
+👤 Gli utenti possono registrarsi e accedere tramite un sistema di autenticazione basato su JWT.
+
+✅ Gestione degli Eventi 🎭
+📅 Creazione, aggiornamento, visualizzazione e cancellazione di eventi (es. feste, matrimoni).
+
+✅ Album Fotografico Condiviso 📸
+📤 Gli ospiti possono caricare le proprie foto in un album collegato all’evento.
+💬 Interazione social: commenti e like ❤️👍 per rendere l’esperienza ancora più coinvolgente!
+
+✨ ScattiFestosi: Il tuo evento, i tuoi ricordi, le tue emozioni… tutti insieme! ✨
+
+                                        Link Utili
+
+Link per utilizzare la Web App: https://scattifestosi.netlify.app/
+Link repository Back-end: https://github.com/Costantino-Scardigno/CapstoneProjectBack-End.git
