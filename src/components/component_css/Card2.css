@@ -23,11 +23,11 @@
 
 .card-2 h2 {
   font-size: 26px;
-  font-weight: 400;
   margin-top: 0;
   margin-right: 30px;
   margin-bottom: 6px;
   color: var(--primary-color);
+  opacity: 1;
 }
 
 .card-2 h3 {
@@ -35,19 +35,12 @@
   font-weight: 400;
   margin: 0 0 12px;
   color: var(--muted-color);
-  opacity: 0.66;
+  opacity: 0.9;
 }
 
 .card-2 p {
-  font-size: 14px;
-  font-weight: 400;
   margin-bottom: 30px;
-  opacity: 0.42;
   color: var(--muted-color);
-}
-
-.card-2 .star-color {
-  color: #dd732c;
 }
 
 @media (width <= 600px) {
@@ -94,6 +87,6 @@
     justify-content: center;
   }
 }
-.mt-5m {
+.mt-5-custom {
   margin-top: 100px;
 }

@@ -10,7 +10,7 @@ function Mysection() {
       <div className="row">
         <div className="col-12">
           <div className="d-flex flex-column">
-            <h2 className="display-1  text-center my-5 text-primary-custom mt-5">
+            <h2 className="display-1 fw-medium  text-center my-5 text-primary-custom mt-5">
               Perchè è utile ScattiFestosi?
             </h2>
             <div className="d-flex align-items-center px-0 px-xl-4">
@@ -24,7 +24,7 @@ function Mysection() {
                   <div>
                     <Users className="responsive-icon me-2 mx-sm-3 text-secondary-custom" />
                   </div>
-                  <p className="fs-2  pb-4 text-primary-custom">
+                  <p className="fs-2  pb-4 text-muted-custom">
                     Gratis per te, gratis per i tuoi ospiti! Crea album
                     illimitati che non scadono mai.
                   </p>
@@ -33,7 +33,7 @@ function Mysection() {
                   <div>
                     <Images className="responsive-icon me-2 mx-sm-3 text-secondary-custom" />
                   </div>
-                  <p className="fs-2 lh-sm pb-4 text-primary-custom">
+                  <p className="fs-2 lh-sm pb-4 text-muted-custom">
                     ScattiFestosi consente caricamenti illimitati, in qualità
                     originale, da parte di ospiti illimitati ed è tutto
                     archiviato privatamente in cloud.
@@ -43,7 +43,7 @@ function Mysection() {
                   <div>
                     <QrCode className="responsive-icon me-2 mx-sm-3 text-secondary-custom" />
                   </div>
-                  <p className="fs-2 lh-sm pb-4 text-primary-custom">
+                  <p className="fs-2 lh-sm pb-4 text-muted-custom">
                     ScattiFestosi consente ai tuoi ospiti di caricare foto
                     utilizzando qualsiasi browser web tramite URL o codice QR.
                   </p>

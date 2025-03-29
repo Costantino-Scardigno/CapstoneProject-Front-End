@@ -12,7 +12,7 @@ function ReviewCarousel() {
       data-bs-ride="carousel"
       data-bs-interval="2000"
     >
-      <h2 className="display-1 text-primary-custom text-center mt-5">
+      <h2 className="display-1 fw-medium text-primary-custom text-center mt-5">
         Recensioni
       </h2>
       <div className="carousel-inner">

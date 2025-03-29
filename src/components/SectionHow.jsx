@@ -7,7 +7,7 @@ function SectionHow() {
         id="how"
         className="container-fluid bg-light-custom px-4 pt-xl-5 pb-xl-5 pt-0"
       >
-        <h2 className="text-center display-1  my-5 text-primary-custom">
+        <h2 className="text-center display-1 fw-medium  my-5 text-primary-custom">
           Come funziona?
         </h2>
 
