@@ -86,12 +86,14 @@ const UploadTab = ({
   };
 
   return (
-    <div className="card bg-white-custom shadow-sm border-custom ">
+    <div className="card bg-white-custom shadow-sm border-custom container pb-2 rounded-5 mt-md-5   ">
       <div className="card-body">
-        <div className="d-flex align-items-center justify-content-between mb-4">
-          <h3 className="h5 mb-0 text-primary-custom">Carica nuove foto</h3>
+        <div className="d-flex flex-column flex-sm-row align-items-center justify-content-between mb-4">
+          <h3 className="h5 mb-2 mb-sm-0 text-primary-custom">
+            Carica nuove foto
+          </h3>
           <select
-            className="form-select border-custom"
+            className="form-select border-custom px-2   "
             style={{ width: "auto" }}
           >
             <option>Seleziona Album</option>
@@ -174,8 +176,14 @@ const UploadTab = ({
               >
                 {uploadLoading ? (
                   <>
-                    <Loader size={16} className="me-2 animate-spin" />
-                    <span>Caricamento...</span>
+                    <span>
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
+                      Caricamento...
+                    </span>
                   </>
                 ) : (
                   <span>Carica foto</span>

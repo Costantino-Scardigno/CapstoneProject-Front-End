@@ -11,11 +11,13 @@ function MyHero({ setShowForm }) {
     <section className="container-fluid padding-top-5 bg-light-custom">
       <div className="row ">
         <div className="col-md-12 col-lg-12 col-xl-12 col-xxl-7 d-flex  flex-column  px-4">
-          <h1 id="my-text" className="fw-bold lh-1 text-primary-custom">
-            Cattura i momenti più belli delle tue feste ed eventi <br /> Scatta,
-            Condividi e Conserva i ricordi
+          <h1 id="my-text" className="fw-bold lh-1 text-primary-custom  ">
+            Cattura i momenti più belli delle tue feste ed eventi! <br />{" "}
+            <span className="text-secondary-custom">Scatta</span>{" "}
+            <span className="text-secondary-custom">Condividi</span>{" "}
+            <span className="text-secondary-custom">Conserva</span> i ricordi
           </h1>
-          <p className="fs-1 lh-custom  fw-lighter m-0 text-primary-custom mt-sm-3">
+          <p className="fs-1 lh-custom  fw-lighter m-0 text-muted-custom mt-sm-3">
             Abbiamo reso facile e semplice la raccolta di foto in tempo reale in
             un album condiviso accessibile ai tuoi invitati
           </p>
@@ -41,22 +43,16 @@ function MyHero({ setShowForm }) {
         </div>
         <div className="col-md-12 col-lg-12 col-xl-5 col-xxl-5 d-lg-none d-xl-block d-md-none d-lg-block d-sm-none d-md-block d-none d-sm-block d-xl-none d-xxl-block px-4">
           <div className="grid-container">
-            <div className="rounded-4 item item1"></div>
-            <div className="item item2 d-lg-none d-xl-block">
-              <video
-                className="w-100 rounded-4"
-                autoPlay
-                muted
-                loop
-                playsInline
-              >
+            <div className="rounded-4  item item1"></div>
+            <div className="item item2 rounded-4  d-lg-none d-xl-block">
+              <video className="rounded-4" autoPlay muted loop playsInline>
                 <source src={video} type="video/mp4" />
               </video>
             </div>
-            <div className="rounded-4 item item4"></div>
-            <div className="rounded-4 item item12"></div>
-            <div className="rounded-4 item item10"></div>
-            <div className="rounded-4 item item11"></div>
+            <div className="rounded-4  item item4"></div>
+            <div className="rounded-4  item item12"></div>
+            <div className="rounded-4  item item10"></div>
+            <div className="rounded-4  item item11"></div>
           </div>
         </div>
       </div>

@@ -13,7 +13,7 @@ function SectionHow() {
 
         <div className="row gy-4">
           <div className="col-xxl-4 col-xl-4 col-lg-12 col-md-12 col-sm-12">
-            <div className="border border-custom rounded-5 d-flex flex-column justify-content-evenly fixed-height bg-white-custom p-4">
+            <div className="border  border-2 border-custom rounded-5 d-flex flex-column justify-content-evenly fixed-height bg-white-custom p-4">
               <div>
                 <h2 className="display-1 text-secondary-custom">01</h2>
               </div>
@@ -31,7 +31,7 @@ function SectionHow() {
           </div>
 
           <div className="col-xxl-4 col-xl-4 col-lg-12 col-md-12 col-sm-12">
-            <div className="border border-custom rounded-5 d-flex flex-column justify-content-evenly fixed-height bg-white-custom p-4">
+            <div className="border  border-2 border-custom rounded-5 d-flex flex-column justify-content-evenly fixed-height bg-white-custom p-4">
               <div>
                 <h2 className="display-1 text-secondary-custom">02</h2>
               </div>
@@ -50,7 +50,7 @@ function SectionHow() {
           </div>
 
           <div className="col-xxl-4 col-xl-4 col-lg-12 col-md-12 col-sm-12">
-            <div className="border border-custom rounded-5 d-flex flex-column justify-content-evenly fixed-height bg-white-custom p-4">
+            <div className="border border-2 border-custom rounded-5 d-flex flex-column justify-content-evenly fixed-height bg-white-custom p-4">
               <div>
                 <h2 className="display-1 text-secondary-custom">03</h2>
               </div>

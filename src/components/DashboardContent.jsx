@@ -151,7 +151,7 @@ const DashboardContent = ({
   };
 
   return (
-    <div className="p-4 flex-grow-1 bg-light-custom">
+    <div className="p-4 flex-grow-1 bg-light-custom ">
       {renderTabContent()}
 
       {/* Utilizziamo il componente modale per l'eliminazione dell'album */}

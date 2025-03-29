@@ -1,6 +1,6 @@
 # ScattiFestosi 🎊📷
 
-                                                              Descrizione Generale
+                                         Descrizione Generale
 
 "ScattiFestosi" è una web application pensata per eventi, matrimoni 💍 e feste 🎉, in cui gli ospiti possono condividere foto in un album comune in tempo reale ⏳.
 L'obiettivo è creare un ricordo collettivo 📖✨ e interattivo, dove ogni partecipante contribuisce con le proprie immagini.

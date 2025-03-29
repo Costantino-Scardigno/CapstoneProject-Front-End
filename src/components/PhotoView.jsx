@@ -377,7 +377,7 @@ const PhotoView = ({
       : 0;
 
   return (
-    <div className="card shadow-sm border-custom rounded-top-5">
+    <div className="card shadow-sm border-custom rounded-5">
       <div className="card-header rounded-top-5 bg-dashboard d-flex align-items-center">
         <button
           className="bg-dashboard border-0 rounded-circle me-2"
@@ -390,8 +390,8 @@ const PhotoView = ({
         </h5>
       </div>
 
-      <div className="row g-0">
-        <div className="col-md-8 bg-dashboard">
+      <div className="row g-0 bg-dashboard rounded-5">
+        <div className="col-md-8 bg-dashboard rounded-bottom-5">
           <div className="bg-dark text-center">
             <img
               src={photo.url}
@@ -404,9 +404,9 @@ const PhotoView = ({
               }}
             />
           </div>
-          <div className="bg-dashboard p-3">
-            <div className="d-flex justify-content-between align-items-center">
-              <div className="d-flex align-items-center gap-3">
+          <div className="bg-dashboard p-3 rounded-bottom-5">
+            <div className="d-flex justify-content-between align-items-center ">
+              <div className="d-flex align-items-center gap-3  ">
                 <button
                   className={`btn btn-sm ${
                     isLiked ? "text-danger" : "text-muted-custom"
@@ -444,7 +444,7 @@ const PhotoView = ({
         </div>
 
         <div
-          className="col-md-4 bg-dashboard d-flex flex-column"
+          className="col-md-4 rounded-bottom-5 bg-dashboard d-flex flex-column"
           style={{ minHeight: "300px" }}
         >
           <div
@@ -458,7 +458,7 @@ const PhotoView = ({
                 Nessun commento. Sii il primo a commentare!
               </p>
             ) : (
-              <div className="d-flex flex-column gap-3">
+              <div className="d-flex flex-column gap-3 ">
                 {displayedComments.map((comment) => (
                   <div
                     key={comment.id}
