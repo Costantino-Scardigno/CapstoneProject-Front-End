@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import DeleteCommentModal from "./modals/DeleteCommentModal";
 import PhotoViewSkeleton from "./Skeleton/PhotoViewSkeleton";
+import ImageFullscreenModal from "./modals/ImageFullscreenModal";
 
 const PhotoView = ({
   selectedPhoto,
@@ -28,6 +29,7 @@ const PhotoView = ({
   const [error, setError] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Stato per il modale di conferma eliminazione
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -369,6 +371,16 @@ const PhotoView = ({
   const photo = photoDetails || selectedPhoto;
   const comments = photo.comments || [];
 
+  // Funzioni per apertura e chiusura del modale per visiualizzare la foto a schermo intero
+  const openFullscreen = (e) => {
+    e.stopPropagation();
+    setIsFullscreen(true);
+  };
+
+  const closeFullscreen = () => {
+    setIsFullscreen(false);
+  };
+
   const likesCount =
     photo.likeCount !== undefined
       ? photo.likeCount
@@ -397,11 +409,12 @@ const PhotoView = ({
               src={photo.url}
               alt=""
               className="img-fluid"
-              style={{ maxHeight: "600px" }}
+              style={{ cursor: "pointer", maxHeight: "600px" }}
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = "/api/placeholder/800/600";
               }}
+              onClick={openFullscreen}
             />
           </div>
           <div className="bg-dashboard p-3 rounded-bottom-5">
@@ -577,6 +590,13 @@ const PhotoView = ({
         comment={commentToDelete}
         isDeleting={deletingComment}
         error={deleteError}
+      />
+
+      {/* Modale per visualizzare la foto selezionata */}
+      <ImageFullscreenModal
+        isOpen={isFullscreen}
+        imageUrl={photo.url}
+        onClose={closeFullscreen}
       />
     </div>
   );

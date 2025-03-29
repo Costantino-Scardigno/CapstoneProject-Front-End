@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Image, Heart, MessageSquare } from "lucide-react";
+import ImageFullscreenModal from "./modals/ImageFullscreenModal";
 
 const SharedAlbumView = () => {
   const { shareCode } = useParams();
@@ -238,35 +239,11 @@ const SharedAlbumView = () => {
       )}
 
       {/* Modale per visualizzare la foto selezionata */}
-      {selectedPhoto && (
-        <div
-          className="modal fade show"
-          style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.8)" }}
-          onClick={closePhoto}
-        >
-          <button
-            type="button"
-            className="btn-close btn-close-white position-absolute top-0 end-0 m-4"
-            onClick={closePhoto}
-            aria-label="Close"
-          ></button>
-          <div
-            className="modal-dialog modal-dialog-centered modal-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="modal-content modal-dialog  modal-dialog-center border-0 bg-transparent">
-              <div className="modal-body p-0 text-center">
-                <img
-                  src={selectedPhoto.url}
-                  className="img-fluid rounded mx-auto d-block"
-                  alt={selectedPhoto.caption || "Photo view"}
-                  style={{ maxHeight: "80vh" }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <ImageFullscreenModal
+        isOpen={selectedPhoto !== null}
+        imageUrl={selectedPhoto?.url}
+        onClose={closePhoto}
+      />
     </div>
   );
 };
