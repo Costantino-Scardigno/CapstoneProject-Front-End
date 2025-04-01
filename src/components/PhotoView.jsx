@@ -389,8 +389,8 @@ const PhotoView = ({
       : 0;
 
   return (
-    <div className="card shadow-sm border-custom rounded-5">
-      <div className="card-header rounded-top-5 bg-dashboard d-flex align-items-center">
+    <div className="card shadow-sm  border-custom rounded-5">
+      <div className="card-header border-bottom-0 rounded-top-5 bg-dashboard d-flex align-items-center">
         <button
           className="bg-dashboard border-0 rounded-circle me-2"
           onClick={() => setSelectedPhoto(null)}
@@ -461,7 +461,7 @@ const PhotoView = ({
           style={{ minHeight: "300px" }}
         >
           <div
-            className="flex-grow-1 overflow-auto p-3"
+            className="flex-grow-1 overflow-auto p-3  border-top border-custom"
             ref={commentsContainerRef}
             style={{ maxHeight: "568px" }}
           >

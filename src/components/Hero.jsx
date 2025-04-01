@@ -12,12 +12,14 @@ function MyHero({ setShowForm }) {
       <div className="row ">
         <div className="col-md-12 col-lg-12 col-xl-12 col-xxl-7 d-flex  flex-column  px-4">
           <h1 id="my-text" className="fw-bold lh-1 text-primary-custom  ">
-            Cattura i momenti più belli delle tue feste ed eventi! <br />{" "}
-            <span className="text-secondary-custom">Scatta</span>{" "}
-            <span className="text-secondary-custom">Condividi</span>{" "}
-            <span className="text-secondary-custom">Conserva</span> i ricordi
+            Cattura ogni istante speciale delle tue feste ed eventi più
+            importanti!
+            <br /> <span className="text-secondary-custom">Scatta </span>{" "}
+            <span className="text-secondary-custom">Condividi </span>{" "}
+            <span className="text-secondary-custom">Conserva </span> i ricordi
+            più belli
           </h1>
-          <p className="fs-1 lh-custom  fw-lighter m-0 text-muted-custom mt-sm-3">
+          <p className="fs-1 lh-custom  fw-lighter mt-2 text-muted-custom mt-sm-3">
             Abbiamo reso facile e semplice la raccolta di foto in tempo reale in
             un album condiviso accessibile ai tuoi invitati
           </p>

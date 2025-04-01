@@ -22,7 +22,7 @@ const Dashboard = () => {
   const [noResults, setNoResults] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
-  const [loading, setLoading] = useState(true);
+  const [albumsLoading, setAlbumsLoading] = useState(true);
 
   // Stati per la condivisione
   const [shareModalOpen, setShareModalOpen] = useState(false);
@@ -48,10 +48,8 @@ const Dashboard = () => {
     setShareModalOpen(true);
   };
 
-  // Callback per il successo della condivisione
   const handleShareSuccess = () => {
     console.log("Album condiviso con successo");
-    setRefreshTrigger((prev) => prev + 1);
   };
 
   // Funzione per eliminare un album
@@ -135,7 +133,7 @@ const Dashboard = () => {
 
   // Funzione per recuperare tutti gli album
   const fetchAllAlbums = () => {
-    setLoading(true); // Imposta loading a true all'inizio della fetch
+    setAlbumsLoading(true);
     const token = sessionStorage.getItem("authToken");
 
     fetch(
@@ -158,11 +156,11 @@ const Dashboard = () => {
         console.log("Album caricati:", data);
         setAlbumsFetch(data);
         setFilteredAlbums(data);
-        setLoading(false); // Imposta loading a false quando i dati sono caricati
+        setAlbumsLoading(false); // Imposta loading a false quando i dati sono caricati
       })
       .catch((error) => {
         console.error("Errore nel caricamento degli album:", error);
-        setLoading(false); // Imposta loading a false anche in caso di errore
+        setAlbumsLoading(false); // Imposta loading a false anche in caso di errore
       });
   };
 
@@ -384,7 +382,7 @@ const Dashboard = () => {
         <DashboardContent
           activeTab={activeTab}
           albums={filteredAlbums}
-          loading={loading}
+          loading={albumsLoading}
           sharedAlbums={sharedAlbums}
           isLoadingShared={isLoadingShared}
           setUploadModalOpen={setUploadModalOpen}

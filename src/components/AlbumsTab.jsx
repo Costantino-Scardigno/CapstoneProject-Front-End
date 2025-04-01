@@ -82,7 +82,8 @@ const AlbumsTab = ({
                     className="card-img rounded-top-4 h-100 object-fit-cover"
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = "/api/placeholder/300/200";
+                      e.target.src =
+                        "https://i.pinimg.com/736x/2a/86/a5/2a86a560f0559704310d98fc32bd3d32.jpg";
                     }}
                   />
                 </div>
@@ -90,6 +91,9 @@ const AlbumsTab = ({
                   <h5 className="card-title text-primary-custom">
                     {album.name}
                   </h5>
+                  {album.description?.trim() && (
+                    <p className="mb-0 d-inline">{album.description}</p>
+                  )}
                   <div className="d-flex justify-content-between small text-muted-custom mb-2">
                     <span>{album.photoCount} foto</span>
                     <div className="d-flex align-items-center">

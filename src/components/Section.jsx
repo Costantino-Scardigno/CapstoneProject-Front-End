@@ -5,11 +5,11 @@ function Mysection() {
   return (
     <section
       id="utilità"
-      className="container-fluid bg-light-custom mb-lg-5 py-xl-5 pt-0 "
+      className="container-fluid bg-light-custom mb-lg-5 py-xl-5 pt-0  "
     >
-      <div className="row">
+      <div className="row ">
         <div className="col-12">
-          <div className="d-flex flex-column">
+          <div className="d-flex flex-column ">
             <h2 className="display-1 fw-medium  text-center my-5 text-primary-custom mt-5">
               Perchè è utile ScattiFestosi?
             </h2>
