@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import DeletePhotoModal from "./modals/DeletePhotoModal";
 import PhotoSkeleton from "./Skeleton/PhotoSkeleton";
+import config from "../../config";
 
 const AlbumView = ({
   selectedAlbum,
@@ -37,16 +38,13 @@ const AlbumView = ({
     const token = sessionStorage.getItem("authToken");
     setLoading(true);
 
-    fetch(
-      `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/events/${selectedAlbum.id}?includeDetails=true`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    fetch(`${config.URL}/api/events/${selectedAlbum.id}?includeDetails=true`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Errore nella richiesta!");

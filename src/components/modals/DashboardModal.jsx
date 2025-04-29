@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Camera, X, Plus, Loader } from "lucide-react";
+import config from "../../../config";
 
 const DashboardModal = ({
   setUploadModalOpen,
@@ -53,21 +54,18 @@ const DashboardModal = ({
     try {
       const token = sessionStorage.getItem("authToken");
 
-      const response = await fetch(
-        "https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/events",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            name: albumTitle,
-            description: albumDescription,
-            eventDate: new Date(),
-          }),
-        }
-      );
+      const response = await fetch(`${config.URL}/api/events`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name: albumTitle,
+          description: albumDescription,
+          eventDate: new Date(),
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Errore durante la creazione dell'album");
@@ -83,7 +81,7 @@ const DashboardModal = ({
           formData.append("eventId", newAlbum.id);
 
           const uploadResponse = await fetch(
-            "https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/photos/upload",
+            `${config.URL}/api/photos/upload`,
             {
               method: "POST",
               headers: {

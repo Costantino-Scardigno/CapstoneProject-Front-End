@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Search, User, LogOut } from "lucide-react";
 import { Button, InputGroup } from "react-bootstrap";
 import logoImage from "../assets/Logo.png";
+import config from "../../config";
+
 const DashboardHeader = ({ onSearch, searchQuery, setSearchQuery }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [user, setUser] = useState(null);
@@ -57,16 +59,13 @@ const DashboardHeader = ({ onSearch, searchQuery, setSearchQuery }) => {
           throw new Error("Impossibile recuperare le informazioni utente");
         }
 
-        const response = await fetch(
-          `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/users/${username}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(`${config.URL}/api/users/${username}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!response.ok) {
           console.error("Errore API:", response.status);

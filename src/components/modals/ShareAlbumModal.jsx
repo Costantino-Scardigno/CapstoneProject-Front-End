@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { X, Copy, Check, QrCode } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import "../component_css/ShareAlbumModal.css";
+import config from "../../../config";
 
 const ShareAlbumModal = ({
   isOpen,
@@ -38,7 +39,7 @@ const ShareAlbumModal = ({
     try {
       const token = sessionStorage.getItem("authToken");
       const response = await fetch(
-        `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/events/${selectedAlbum.id}/share`,
+        `${config.URL}/api/events/${selectedAlbum.id}/share`,
         {
           method: "POST",
           headers: {

@@ -9,6 +9,7 @@ import {
   Camera,
 } from "lucide-react";
 import SettingsTabSkeleton from "./Skeleton/SettingsTabSkeleton";
+import config from "../../config";
 
 const SettingsTab = () => {
   const [user, setUser] = useState(null);
@@ -57,16 +58,13 @@ const SettingsTab = () => {
         }
 
         // Fetch dati dell'utente
-        const response = await fetch(
-          `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/users/${username}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(`${config.URL}/api/users/${username}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error("Errore nel recupero delle informazioni utente");
@@ -187,16 +185,13 @@ const SettingsTab = () => {
       }
 
       // Aggiorna l'utente
-      const response = await fetch(
-        `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/users/${user.id}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        }
-      );
+      const response = await fetch(`${config.URL}/api/users/${user.id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
 
       if (!response.ok) {
         let errorMessage;

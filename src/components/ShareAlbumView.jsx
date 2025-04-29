@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Image, Heart, MessageSquare } from "lucide-react";
 import ImageFullscreenModal from "./modals/ImageFullscreenModal";
+import config from "../../config";
 
 const SharedAlbumView = () => {
   const { shareCode } = useParams();
@@ -32,7 +33,7 @@ const SharedAlbumView = () => {
 
     try {
       const response = await fetch(
-        `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/events/share/${shareCode}`,
+        `${config.URL}/api/events/share/${shareCode}`,
         {
           method: "GET",
           headers: {
@@ -73,20 +74,17 @@ const SharedAlbumView = () => {
     if (!authToken || !albumId) return;
 
     try {
-      const response = await fetch(
-        "https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/events/accept-share",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify({
-            eventId: albumId,
-            shareCode: shareCode,
-          }),
-        }
-      );
+      const response = await fetch(`${config.URL}/api/events/accept-share`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          eventId: albumId,
+          shareCode: shareCode,
+        }),
+      });
 
       if (!response.ok) {
         console.error("Errore nel salvare l'album condiviso");

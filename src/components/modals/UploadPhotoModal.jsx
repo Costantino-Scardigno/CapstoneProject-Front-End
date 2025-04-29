@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Camera, X, Upload, Loader } from "lucide-react";
+import config from "../../../config";
 
 const UploadPhotoModal = ({
   isOpen,
@@ -60,16 +61,13 @@ const UploadPhotoModal = ({
           formData.append("file", fileObj.file);
           formData.append("eventId", selectedAlbum.id);
 
-          const response = await fetch(
-            "https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/photos/upload",
-            {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-              body: formData,
-            }
-          );
+          const response = await fetch(`${config.URL}/api/photos/upload`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+          });
 
           if (!response.ok) {
             throw new Error(`Errore durante il caricamento di ${fileObj.name}`);

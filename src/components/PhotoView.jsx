@@ -11,6 +11,7 @@ import {
 import DeleteCommentModal from "./modals/DeleteCommentModal";
 import PhotoViewSkeleton from "./Skeleton/PhotoViewSkeleton";
 import ImageFullscreenModal from "./modals/ImageFullscreenModal";
+import config from "../../config";
 
 const PhotoView = ({
   selectedPhoto,
@@ -70,16 +71,13 @@ const PhotoView = ({
         return;
       }
 
-      fetch(
-        `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/users/${username}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      fetch(`${config.URL}/api/users/${username}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
         .then((response) => {
           if (!response.ok) {
             throw new Error("Errore nel recupero delle informazioni utente");
@@ -113,16 +111,13 @@ const PhotoView = ({
     // Recupera il token dal sessionStorage
     const token = sessionStorage.getItem("authToken");
 
-    fetch(
-      `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/photos/${selectedPhoto.id}?includeDetails=true`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    fetch(`${config.URL}/api/photos/${selectedPhoto.id}?includeDetails=true`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Errore nel recupero dei dettagli della foto!");
@@ -155,15 +150,12 @@ const PhotoView = ({
   const checkLikeStatus = (photoId) => {
     const token = sessionStorage.getItem("authToken");
 
-    fetch(
-      `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/likes/photo/${photoId}/status`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    fetch(`${config.URL}/api/likes/photo/${photoId}/status`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Errore nel verificare lo stato del like");
@@ -283,16 +275,13 @@ const PhotoView = ({
     // Recupera il token dal sessionStorage
     const token = sessionStorage.getItem("authToken");
 
-    fetch(
-      `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/comments/${commentToDelete.id}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    fetch(`${config.URL}/api/comments/${commentToDelete.id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Errore nell'eliminazione del commento");

@@ -7,6 +7,7 @@ import ShareAlbumModal from "./modals/ShareAlbumModal.jsx";
 import "./component_css/Dashboard.css";
 import DashboardModal from "./modals/DashboardModal.jsx";
 import DashboardTab from "./DashboardTab.jsx";
+import config from "../../config";
 
 const Dashboard = () => {
   // Stati principali
@@ -58,15 +59,12 @@ const Dashboard = () => {
     if (!token) return;
 
     try {
-      const response = await fetch(
-        `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/events/${albumId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${config.URL}/api/events/${albumId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Errore durante l'eliminazione dell'album");
@@ -136,16 +134,13 @@ const Dashboard = () => {
     setAlbumsLoading(true);
     const token = sessionStorage.getItem("authToken");
 
-    fetch(
-      "https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/events?includeDetails=true",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    fetch(`${config.URL}/api/events?includeDetails=true`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Errore nella richiesta!");
@@ -169,16 +164,13 @@ const Dashboard = () => {
     setIsLoadingShared(true);
     const token = sessionStorage.getItem("authToken");
 
-    fetch(
-      "https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/events/shared?includeDetails=true",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    fetch(`${config.URL}/api/events/shared?includeDetails=true`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Errore nel recupero degli album condivisi!");
@@ -241,7 +233,7 @@ const Dashboard = () => {
     try {
       // Verifica se la foto è già piaciuta per determinare l'azione da eseguire
       const checkResponse = await fetch(
-        `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/likes/photo/${photoId}/status`,
+        `${config.URL}/api/likes/photo/${photoId}/status`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -259,8 +251,8 @@ const Dashboard = () => {
       // Esegue l'azione (like o unlike)
       const response = await fetch(
         isLiked
-          ? `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/likes/photo/${photoId}`
-          : `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/likes`,
+          ? `${config.URL}/api/likes/photo/${photoId}`
+          : `${config.URL}/api/likes`,
         {
           method: isLiked ? "DELETE" : "POST",
           headers: {
@@ -288,20 +280,17 @@ const Dashboard = () => {
     if (!token) return;
 
     try {
-      const response = await fetch(
-        "https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/comments",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            content: commentText,
-            photoId: photoId,
-          }),
-        }
-      );
+      const response = await fetch(`${config.URL}/api/comments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          content: commentText,
+          photoId: photoId,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Errore nell'aggiunta del commento");
@@ -323,7 +312,7 @@ const Dashboard = () => {
       const token = sessionStorage.getItem("authToken");
 
       const response = await fetch(
-        `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/events/${albumId}?includeDetails=true`,
+        `${config.URL}/api/events/${albumId}?includeDetails=true`,
         {
           method: "GET",
           headers: {

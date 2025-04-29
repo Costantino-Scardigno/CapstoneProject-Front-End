@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Loader, Trash2, AlertTriangle } from "lucide-react";
+import config from "../../../config";
 
 const DeletePhotoModal = ({ photo, onClose, onDelete }) => {
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -20,16 +21,13 @@ const DeletePhotoModal = ({ photo, onClose, onDelete }) => {
 
     try {
       const token = sessionStorage.getItem("authToken");
-      const response = await fetch(
-        `https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/photos/${photo.id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${config.URL}/api/photos/${photo.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Errore durante l'eliminazione della foto");

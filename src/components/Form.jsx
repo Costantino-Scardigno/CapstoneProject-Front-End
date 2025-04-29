@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./component_css/Form.css";
 import { useNavigate } from "react-router-dom";
+import config from "../../config";
 
 function Form({ show, onClose }) {
   const [activeForm, setActiveForm] = useState("register"); // "register" di default
@@ -75,16 +76,13 @@ function Form({ show, onClose }) {
     };
 
     try {
-      const response = await fetch(
-        "https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/auth/signin",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(user),
-        }
-      );
+      const response = await fetch(`${config.URL}/api/auth/signin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
 
       const contentType = response.headers.get("content-type");
       let data;
@@ -168,16 +166,13 @@ function Form({ show, onClose }) {
     try {
       console.log("Invio dati registrazione:", newUser);
 
-      const response = await fetch(
-        "https://sure-kiele-costantino98-efa87c8c.koyeb.app/api/auth/signup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newUser),
-        }
-      );
+      const response = await fetch(`${config.URL}/api/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newUser),
+      });
 
       // Gestione della risposta per evitare errori JSON
       const contentType = response.headers.get("content-type");
