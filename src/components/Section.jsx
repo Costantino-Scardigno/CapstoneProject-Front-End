@@ -15,7 +15,7 @@ function Mysection() {
             </h2>
             <div className="d-flex align-items-center px-0 px-xl-4">
               <img
-                className="rounded-5 w-20  mb-4  d-none d-xxl-block"
+                className=" rounded-5 w-20  mb-4  d-none d-xxl-block"
                 src="https://images.weduploader.com/v2/assets/images/wedding-image5.jpg"
                 alt=""
               />
